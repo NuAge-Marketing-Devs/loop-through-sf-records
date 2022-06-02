@@ -1,0 +1,92 @@
+<div class="form-group samples">
+
+          <div class="col-12">
+            <br>
+            <br>
+            <h5>Choose Stain Sample:
+            </h5>
+            <br>
+          </div>
+
+          %%[
+          var @i, @familyRows, @familyRow, @familyName, @prevFamilyName, @rowsToReturn
+
+          set @familyRows = LookupOrderedRows("Stain Sample Reference" , 0, "Family asc", "Pricebook2Id", "18DIGITSFID")
+          
+          for @i = 1 to RowCount(@familyRows) DO
+
+            set @familyRow = Row(@familyRows,@i)
+            set @familyName = Field(@familyRow, "Family")
+            
+            if empty(@prevFamilyName) or @familyName != @prevFamilyName then
+              
+              set @prevFamilyName = @familyName ]%%
+
+              <br><h6>%%=v(@familyName)=%%</h6><br>
+
+          %%[ 
+
+            var @rows, @rowCount, @x
+            set @rows = LookupOrderedRows("Stain Sample Reference", 0, "Web_Name asc", "Family", @familyName)
+            set @rowCount = rowcount(@rows)
+              for @x = 1 to @rowCount do
+              var @productName
+              set @row = row(@rows, @x)
+              set @productName = field(@row,"Web_Name")
+              set @productCode = field(@row,"ProductCode")
+              ]%%
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="LogSample" value="%%=v(@productCode)=%%" id="%%=v(@productName)=%%" required="">
+                <label class="form-check-label" for="%%=v(@productName)=%%">
+                  %%=v(@productName)=%%
+                </label>
+              </div>
+              %%[next @x]%%
+              %%[ENDIF]%%
+            %%[ next @i ]%%
+
+          <div class="col-12">
+            <br>
+            <br>
+            <h5>Choose Top Coat Sample:
+            </h5>
+            <br>
+          </div>
+
+            %%[
+          var @i, @familyRows, @familyRow, @familyName, @prevFamilyName, @rowsToReturn
+
+          set @familyRows = LookupOrderedRows("Stain Sample Reference" , 0, "Family asc", "Pricebook2Id", "18DIGITSFID")
+          
+          for @i = 1 to RowCount(@familyRows) DO
+
+            set @familyRow = Row(@familyRows,@i)
+            set @familyName = Field(@familyRow, "Family")
+            
+            if empty(@prevFamilyName) or @familyName != @prevFamilyName then
+              
+              set @prevFamilyName = @familyName ]%%
+
+              <br><h6>%%=v(@familyName)=%%</h6><br>
+
+          %%[ 
+
+            var @rows, @rowCount, @x
+            set @rows = LookupOrderedRows("Stain Sample Reference", 0, "Web_Name asc", "Family", @familyName)
+            set @rowCount = rowcount(@rows)
+              for @x = 1 to @rowCount do
+              var @productName
+              set @row = row(@rows, @x)
+              set @productName = field(@row,"Web_Name")
+              set @productCode = field(@row,"ProductCode")
+              ]%%
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="LogSample" value="%%=v(@productCode)=%%" id="%%=v(@productName)=%%" required="">
+                <label class="form-check-label" for="%%=v(@productName)=%%">
+                  %%=v(@productName)=%%
+                </label>
+              </div>
+              %%[next @x]%%
+              %%[ENDIF]%%
+            %%[ next @i ]%%
+        </div>

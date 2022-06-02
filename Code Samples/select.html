@@ -1,0 +1,55 @@
+<div class="form-group">
+    <label for="Select_Product">Product</label>
+    <select class="form-control selectpicker" id="Select_Product" name="Select_Product" data-show-subtext="true"
+        data-live-search="true">
+        <option selected="selected">Select Your Product...</option>
+%%[
+    VAR @i, @familyRows, @familyRow, @familyName, @prevFamilyName, @rowsToReturn
+    SET @familyRows = LookupOrderedRows(
+        "Product2_Salesforce",
+        0,
+        "Family asc",
+        "IsActive",
+        "True"
+    )
+    SET @prevFamilyName = ""
+    FOR @I = 1 TO ROWCOUNT(@FAMILYROWS) DO
+        SET @familyRow = Row(@familyRows, @i)
+        SET @familyName = Field(@familyRow, "Family")
+        IF empty(@familyName) THEN
+            SET @familyName = "Other"
+        ENDIF
+        IF empty(@prevFamilyName) OR @familyName != @prevFamilyName THEN
+            SET @prevFamilyName = @familyName
+]%%
+<optgroup label="%%=v(@familyName)=%%">
+        %%[
+            SET @familyName = Field(@familyRow, "Family")
+            VAR @rows, @rowCount, @x
+            SET @rows = LookupOrderedRows(
+                "Product2_Salesforce",
+                0,
+                "Name asc",
+                "IsActive",
+                "True",
+                "Family",
+                @familyName
+            )
+            SET @rowCount = rowcount(@rows)
+            FOR @X = 1 TO @ROWCOUNT DO
+                VAR @productName
+                SET @row = row(@rows, @x)
+                SET @productName = field(@row, "Name")
+        ]%%
+<option>%%=v(@productName)=%%</option>
+            %%[
+            NEXT @X @x
+            ]%%
+
+        %%[
+        ENDIF
+    NEXT @i
+        ]%%
+</optgroup>
+    </select>
+</div>
